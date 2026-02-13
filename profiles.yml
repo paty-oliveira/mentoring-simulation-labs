@@ -1,0 +1,14 @@
+ecommerce:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: <your_account> # e.g. xy12345.us-east-1
+      user: <your_user>
+      password: <your_password>
+      role: <your_role> # e.g. TRANSFORMER
+      database: <your_database> # e.g. DEV
+      warehouse: <your_warehouse> # e.g. COMPUTE_WH
+      schema: dbt_dev # personal dev schema
+      threads: 4
+      client_session_keep_alive: false

@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Cleaned and renamed customer records from the raw seed.
+    columns:
+      - name: customer_id
+        description: Unique customer identifier (cast to varchar).
+        data_tests:
+          - unique
+          - not_null
+      - name: full_name
+        description: Concatenated first and last name.
+      - name: email
+        description: Lower-cased customer email address.
+      - name: country
+        description: Upper-cased two-letter country code.
+      - name: created_at
+        description: Account creation timestamp.
+
+  - name: stg_products
+    description: Cleaned and enriched product catalogue.
+    columns:
+      - name: product_id
+        data_tests:
+          - unique
+          - not_null
+      - name: category
+        description: Lower-cased product category.
+      - name: gross_margin
+        description: unit_price minus unit_cost.
+      - name: margin_pct
+        description: Gross margin as a fraction of unit_price.
+
+  - name: stg_orders
+    description: Cleaned order headers with derived status and date fields.
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+      - name: order_status
+        data_tests:
+          - accepted_values:
+              values: ['placed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned']
+      - name: order_status_label
+        description: Human-readable version of order_status.
+      - name: is_active_order
+        description: True when the order is still open (placed / processing / shipped).
+      - name: has_discount
+        description: True when a discount code was applied.
+      - name: order_date
+        description: Date portion of created_at.
+      - name: order_week
+        description: Week start date (date_trunc week).
+      - name: order_month
+        description: Month start date (date_trunc month).
+      - name: order_year
+        description: Year start date (date_trunc year).
+
+  - name: stg_order_items
+    description: Cleaned order line items with revenue calculations.
+    columns:
+      - name: order_item_id
+        data_tests:
+          - unique
+          - not_null
+      - name: discount_pct
+        description: "Fractional discount (0.0 – 1.0)."
+      - name: gross_revenue
+        description: unit_price * quantity (before discount).
+      - name: net_revenue
+        description: unit_price * quantity * (1 - discount_pct).
+      - name: discount_amount
+        description: unit_price * quantity * discount_pct.

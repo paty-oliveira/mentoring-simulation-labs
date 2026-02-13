@@ -1,0 +1,59 @@
+version: 2
+
+seeds:
+  - name: raw_customers
+    description: Raw customer records loaded from CSV seed.
+    columns:
+      - name: customer_id
+        description: Unique customer identifier.
+      - name: first_name
+      - name: last_name
+      - name: email
+      - name: country
+        description: Two-letter ISO country code.
+      - name: phone
+      - name: created_at
+        description: Timestamp when the customer account was created.
+
+  - name: raw_products
+    description: Raw product catalogue loaded from CSV seed.
+    columns:
+      - name: product_id
+        description: Unique product identifier.
+      - name: product_name
+      - name: category
+      - name: subcategory
+      - name: unit_price
+        description: Selling price in USD.
+      - name: unit_cost
+        description: Cost of goods in USD.
+      - name: is_active
+        description: Whether the product is currently available for sale.
+      - name: created_at
+
+  - name: raw_orders
+    description: Raw order header records loaded from CSV seed.
+    columns:
+      - name: order_id
+        description: Unique order identifier.
+      - name: customer_id
+      - name: order_status
+        description: "One of: placed, processing, shipped, delivered, cancelled, returned."
+      - name: created_at
+      - name: updated_at
+      - name: shipping_country
+      - name: discount_code
+        description: Promotional code applied to the order, if any.
+
+  - name: raw_order_items
+    description: Raw order line-item records loaded from CSV seed.
+    columns:
+      - name: order_item_id
+        description: Unique line-item identifier.
+      - name: order_id
+      - name: product_id
+      - name: quantity
+      - name: unit_price
+        description: Price charged at time of purchase (may differ from current product price).
+      - name: discount_pct
+        description: Fractional discount applied to this line item (e.g. 0.10 = 10% off).

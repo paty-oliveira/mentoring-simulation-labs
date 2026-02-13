@@ -1,0 +1,11 @@
+product_id,product_name,category,subcategory,unit_price,unit_cost,is_active,created_at
+1,Wireless Headphones,Electronics,Audio,79.99,30.00,true,2023-01-01
+2,Running Shoes,Apparel,Footwear,89.99,35.00,true,2023-01-01
+3,Coffee Maker,Home & Kitchen,Appliances,49.99,18.00,true,2023-01-01
+4,Yoga Mat,Sports,Fitness,29.99,10.00,true,2023-01-01
+5,Laptop Stand,Electronics,Accessories,34.99,12.00,true,2023-02-01
+6,Winter Jacket,Apparel,Outerwear,129.99,55.00,true,2023-02-01
+7,Blender,Home & Kitchen,Appliances,39.99,14.00,false,2023-02-01
+8,Basketball,Sports,Ball Sports,24.99,8.00,true,2023-03-01
+9,Desk Lamp,Home & Kitchen,Lighting,19.99,6.00,true,2023-03-01
+10,Sunglasses,Apparel,Accessories,49.99,18.00,true,2023-03-01

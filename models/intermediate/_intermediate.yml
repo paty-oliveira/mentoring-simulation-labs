@@ -1,0 +1,18 @@
+version: 2
+
+models:
+  - name: int_order_items_enriched
+    description: >
+      Order line items joined with product details.
+      Adds cost and margin calculations at the line-item level.
+    columns:
+      - name: order_item_id
+        data_tests:
+          - unique
+          - not_null
+      - name: total_cost
+        description: unit_cost * quantity.
+      - name: gross_profit
+        description: net_revenue minus total_cost.
+      - name: gross_profit_margin
+        description: gross_profit / net_revenue (null-safe).

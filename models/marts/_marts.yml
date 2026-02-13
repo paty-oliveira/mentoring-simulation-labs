@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: >
+      One row per order with aggregated item metrics and derived status fields.
+      This is the primary fact table for order-level analysis.
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+      - name: order_status_label
+        description: Human-readable status (duplicated from stg_orders — refactor into a macro!).
+      - name: item_count
+        description: Number of distinct line items on the order.
+      - name: gross_revenue
+        description: Total revenue before discounts.
+      - name: net_revenue
+        description: Total revenue after discounts.
+      - name: gross_profit
+        description: net_revenue minus total_cost.
+      - name: delivered_revenue
+        description: net_revenue when status = delivered, else 0.
+      - name: shipped_revenue
+        description: net_revenue when status = shipped, else 0.
+      - name: placed_revenue
+        description: net_revenue when status = placed, else 0.
+      - name: returned_revenue
+        description: net_revenue when status = returned, else 0.
+      - name: cancelled_revenue
+        description: net_revenue when status = cancelled, else 0.
+
+  - name: fct_order_items
+    description: >
+      Grain: one row per order line item, enriched with order and product context.
+    columns:
+      - name: order_item_id
+        data_tests:
+          - unique
+          - not_null
+      - name: category_group
+        description: Simplified category label (duplicated from dim_products — refactor into a macro!).
+
+  - name: dim_customers
+    description: >
+      One row per customer with lifetime order statistics and derived segments.
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_tier
+        description: "Value tier based on lifetime spend: Gold / Silver / Bronze / New."
+      - name: customer_segment
+        description: "Engagement segment based on order count: No Orders / One-Time Buyer / Repeat Buyer / Loyal Customer."
+
+  - name: dim_products
+    description: >
+      One row per product with sales statistics and performance classification.
+    columns:
+      - name: product_id
+        data_tests:
+          - unique
+          - not_null
+      - name: performance_tier
+        description: "Sales tier: Top Seller / Mid Seller / Low Seller / No Sales."
+      - name: category_group
+        description: "Simplified category label — same logic repeated in fct_order_items (macro candidate!)."
