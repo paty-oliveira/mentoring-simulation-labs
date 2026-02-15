@@ -31,16 +31,13 @@ final as (
         oi.product_name,
         oi.category,
         oi.subcategory,
-
-        -- Category group — same CASE WHEN as in dim_products.sql (macro candidate!)
         case oi.category
-            when 'electronics'      then 'Tech'
-            when 'apparel'          then 'Fashion'
-            when 'home & kitchen'   then 'Home'
-            when 'sports'           then 'Sports'
-            else                         'Other'
-        end                             as category_group,
-
+            when 'electronics' then 'Tech'
+            when 'apparel' then 'Fashion'
+            when 'home & kitchen' then 'Home'
+            when 'sports' then 'Sports'
+            else 'Other'
+        end as category_group,
         o.order_date,
         o.order_week,
         o.order_month,
@@ -48,16 +45,12 @@ final as (
         o.order_status,
         o.shipping_country,
         o.has_discount,
-
         oi.quantity,
         oi.unit_price,
         oi.discount_pct,
-
-        -- Revenue calculations — same formulas as in stg_order_items.sql (macro candidate!)
-        oi.unit_price * oi.quantity                             as gross_revenue,
-        oi.unit_price * oi.quantity * (1 - oi.discount_pct)    as net_revenue,
-        oi.unit_price * oi.quantity * oi.discount_pct           as discount_amount,
-
+        oi.unit_price * oi.quantity as gross_revenue,
+        oi.unit_price * oi.quantity * (1 - oi.discount_pct) as net_revenue,
+        oi.unit_price * oi.quantity * oi.discount_pct as discount_amount,
         oi.total_cost,
         oi.gross_profit,
         oi.gross_profit_margin

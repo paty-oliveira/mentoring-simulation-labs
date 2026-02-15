@@ -7,15 +7,15 @@ with source as (
 renamed as (
 
     select
-        customer_id::varchar            as customer_id,
-        first_name::varchar             as first_name,
-        last_name::varchar              as last_name,
-        first_name || ' ' || last_name  as full_name,
-        lower(email)::varchar           as email,
-        upper(country)::varchar         as country,
-        phone::varchar                  as phone,
-        created_at::timestamp           as created_at,
-        created_at::date                as created_date
+        customer_id::varchar as customer_id,
+        first_name::varchar as first_name,
+        last_name::varchar as last_name,
+        first_name || ' ' || last_name as full_name,
+        lower(email)::varchar as email,
+        upper(country)::varchar as country,
+        phone::varchar as phone,
+        created_at::timestamp as created_at,
+        created_at::date as created_date
 
     from source
 

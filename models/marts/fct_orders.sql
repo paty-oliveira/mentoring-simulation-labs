@@ -37,9 +37,6 @@ final as (
         o.order_month,
         o.order_year,
         o.order_status,
-
-        -- Human-readable status label.
-        -- NOTE: this same CASE WHEN block is already in stg_orders.sql — extract it into a macro!
         case o.order_status
             when 'placed'       then 'Order Placed'
             when 'processing'   then 'In Processing'
@@ -48,24 +45,18 @@ final as (
             when 'cancelled'    then 'Cancelled'
             when 'returned'     then 'Returned'
             else                     'Unknown'
-        end                             as order_status_label,
-
+        end as order_status_label,
         o.is_active_order,
         o.shipping_country,
         o.discount_code,
         o.has_discount,
-
-        -- Order-level metrics
-        coalesce(ot.item_count,     0)  as item_count,
-        coalesce(ot.total_units,    0)  as total_units,
-        coalesce(ot.gross_revenue,  0)  as gross_revenue,
-        coalesce(ot.net_revenue,    0)  as net_revenue,
+        coalesce(ot.item_count, 0)  as item_count,
+        coalesce(ot.total_units, 0)  as total_units,
+        coalesce(ot.gross_revenue, 0)  as gross_revenue,
+        coalesce(ot.net_revenue, 0)  as net_revenue,
         coalesce(ot.total_discount, 0)  as total_discount,
-        coalesce(ot.total_cost,     0)  as total_cost,
-        coalesce(ot.gross_profit,   0)  as gross_profit,
-
-        -- Revenue split by order status.
-        -- NOTE: these five nearly-identical lines are a perfect Jinja for-loop exercise!
+        coalesce(ot.total_cost, 0)  as total_cost,
+        coalesce(ot.gross_profit, 0)  as gross_profit,
         case when o.order_status = 'delivered'  then ot.net_revenue else 0 end as delivered_revenue,
         case when o.order_status = 'shipped'    then ot.net_revenue else 0 end as shipped_revenue,
         case when o.order_status = 'placed'     then ot.net_revenue else 0 end as placed_revenue,

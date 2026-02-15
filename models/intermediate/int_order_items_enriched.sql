@@ -25,12 +25,9 @@ enriched as (
         oi.gross_revenue,
         oi.net_revenue,
         oi.discount_amount,
-
-        -- Cost and margin at the line-item level
-        p.unit_cost * oi.quantity                               as total_cost,
-        oi.net_revenue - (p.unit_cost * oi.quantity)            as gross_profit,
-        (oi.net_revenue - (p.unit_cost * oi.quantity))
-            / nullif(oi.net_revenue, 0)                         as gross_profit_margin
+        p.unit_cost * oi.quantity as total_cost,
+        oi.net_revenue - (p.unit_cost * oi.quantity) as gross_profit,
+        (oi.net_revenue - (p.unit_cost * oi.quantity)) / nullif(oi.net_revenue, 0) as gross_profit_margin
 
     from order_items oi
     left join products p

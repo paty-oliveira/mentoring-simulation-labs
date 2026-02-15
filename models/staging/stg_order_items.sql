@@ -7,18 +7,15 @@ with source as (
 renamed as (
 
     select
-        order_item_id::varchar          as order_item_id,
-        order_id::varchar               as order_id,
-        product_id::varchar             as product_id,
-        quantity::integer               as quantity,
-        unit_price::float               as unit_price,
-        discount_pct::float             as discount_pct,
-
-        -- Revenue calculations.
-        -- NOTE: these same formulas are repeated in fct_order_items.sql — a great macro candidate!
-        unit_price * quantity                           as gross_revenue,
-        unit_price * quantity * (1 - discount_pct)     as net_revenue,
-        unit_price * quantity * discount_pct            as discount_amount
+        order_item_id::varchar as order_item_id,
+        order_id::varchar as order_id,
+        product_id::varchar as product_id,
+        quantity::integer as quantity,
+        unit_price::float as unit_price,
+        discount_pct::float as discount_pct,
+        unit_price * quantity as gross_revenue,
+        unit_price * quantity * (1 - discount_pct) as net_revenue,
+        unit_price * quantity * discount_pct as discount_amount
 
     from source
 
