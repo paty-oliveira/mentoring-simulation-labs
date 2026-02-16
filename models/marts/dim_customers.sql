@@ -1,3 +1,43 @@
+{%- set tiers = [
+    {
+        'name': 'Gold',
+        'value': 500,
+        'operator': '>='
+    },
+    {
+        'name': 'Silver',
+        'value': 200,
+        'operator': '>='
+    },
+    {
+        'name': 'Bronze',
+        'value': 50,
+        'operator': '>='
+    }
+] -%}
+
+{%- set default_customer_tier = 'New' -%}
+
+{%- set segments = [
+    {
+        'name': 'No Orders',
+        'operator': '=',
+        'value': 0
+    },
+    {
+        'name': 'One-Time Buyer',
+        'operator': '=',
+        'value': 1
+    },
+    {
+        'name': 'Repeat Buyer',
+        'operator': '<=',
+        'value': 5
+    }
+ ] -%}
+
+{%- set default_customer_segment = 'Loyal Customer' -%}
+
 with customers as (
 
     select * from {{ ref('stg_customers') }}
@@ -41,16 +81,16 @@ final as (
         coalesce(os.returned_orders, 0) as returned_orders,
         coalesce(os.cancelled_orders, 0) as cancelled_orders,
         case
-            when coalesce(os.lifetime_value, 0) >= 500 then 'Gold'
-            when coalesce(os.lifetime_value, 0) >= 200 then 'Silver'
-            when coalesce(os.lifetime_value, 0) >= 50  then 'Bronze'
-            else 'New'
+            {% for tier in tiers -%}
+                when coalesce(os.lifetime_value, 0) {{ tier.operator }} {{ tier.value }} then '{{ tier.name }}' 
+            {% endfor -%}
+            else '{{ default_customer_tier }}'
         end as customer_tier,
         case
-            when coalesce(os.total_orders, 0) = 0 then 'No Orders'
-            when coalesce(os.total_orders, 0) = 1 then 'One-Time Buyer'
-            when coalesce(os.total_orders, 0) <= 3 then 'Repeat Buyer'
-            else 'Loyal Customer'
+            {% for segment in segments -%}
+                when coalesce(os.total_orders, 0) {{ segment.operator }} {{ segment.value }} then '{{ segment.name }}'
+            {% endfor -%}
+            else '{{ default_customer_segment }}'
         end as customer_segment
 
     from customers c
