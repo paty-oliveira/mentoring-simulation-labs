@@ -1,3 +1,7 @@
+{% set date_splits = ['week', 'month', 'year'] %}
+
+{% set active_order_status = ('placed', 'processing', 'shipped') %}
+
 with source as (
 
     select * from {{ ref('raw_orders') }}
@@ -20,7 +24,7 @@ renamed as (
             else 'Unknown'
         end as order_status_label,
         case
-            when order_status in ('placed', 'processing', 'shipped') 
+            when order_status in {{ active_order_status }}
             then true
             else false
         end as is_active_order,
@@ -34,9 +38,9 @@ renamed as (
         created_at::timestamp as created_at,
         updated_at::timestamp as updated_at,
         created_at::date as order_date,
-        date_trunc('week',  created_at::date) as order_week,
-        date_trunc('month', created_at::date) as order_month,
-        date_trunc('year',  created_at::date) as order_year
+        {% for split in date_splits -%}
+            date_trunc('{{ split }}', created_at::date) as order_{{ split }} {% if not loop.last %},{% endif %}
+        {% endfor -%}
 
     from source
 
