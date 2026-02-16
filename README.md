@@ -51,8 +51,7 @@ macros/                       ← utility macros
    ```
    dbt deps
    dbt seed
-   dbt run
-   dbt test
+   dbt build
    ```
 
 ---
